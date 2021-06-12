@@ -1,0 +1,35 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+}
+
+.App {
+  display: block;
+  height: 0;
+  width: 100vw;
+  opacity: 0;
+  transition: opacity 0.25s linear;
+  padding: 2%;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-left: 10px solid rgba(0,0,0,0);
+  background-clip: padding-box;
+  background-color: rgba(100, 100, 100, 0.9);
+}
