@@ -6,7 +6,7 @@ import { IContainer } from "../../state/container.state";
 
 
 
-type Props = {
+interface Props {
   container: IContainer
 };
 
@@ -37,7 +37,6 @@ const Container: React.FC<Props> = ({container}) => {
 
   const classes = useStyles();
 
-  console.log(container);
   return  (
     <div className={classes.container} >
       <ContainerHeader

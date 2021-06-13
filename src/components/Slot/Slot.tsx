@@ -2,16 +2,16 @@ import React from "react";
 import { makeStyles, Theme } from "@material-ui/core";
 import { IItem, SlotType } from "../../state/container.state";
 
-type EmptyHotbarProps = {
+interface EmptyHotbarProps {
   slotNumber: number
 }
 
-type HotbarProps = {
-  item: IItem,
+interface HotbarProps {
+  item: IItem
   slotNumber: number
 }
 
-type Props = {
+interface Props {
   item: IItem
 }
 

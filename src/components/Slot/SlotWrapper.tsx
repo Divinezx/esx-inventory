@@ -3,8 +3,8 @@ import { Slot, EmptySlot, HotbarSlot, EmptyHotbarSlot } from "./Slot";
 import { makeStyles, Theme } from "@material-ui/core";
 import { IItem } from "../../state/container.state";
 
-type Props = {
-  slots: number,
+interface Props {
+  slots: number
   inventory:  {[key: number]: IItem}
 };
 
