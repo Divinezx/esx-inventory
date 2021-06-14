@@ -15,20 +15,22 @@ export const usePreviewDrag = () => {
     preview.style.height = height + 'px';
     preview.style.position = 'absolute';
 
+    if (item.amount > 0) {
+      const itemInfo = document.createElement('div');
+      itemInfo.classList.add(classes.itemInfo);
 
-    const itemInfo = document.createElement('div');
-    itemInfo.classList.add(classes.itemInfo);
+      const itemAmount = document.createElement('div');
+      itemAmount.classList.add(classes.itemAmount);
+      itemAmount.appendChild(document.createTextNode(`${item.amount}`));
+      itemInfo.appendChild(itemAmount);
 
-    const itemAmount = document.createElement('div');
-    itemAmount.classList.add(classes.itemAmount);
-    itemAmount.appendChild(document.createTextNode(`${item.amount}`));
-    itemInfo.appendChild(itemAmount);
+      const itemWeight = document.createElement('div');
+      itemWeight.classList.add(classes.itemWeight);
+      itemWeight.appendChild(document.createTextNode(`${item.weight}`));
+      itemInfo.appendChild(itemWeight);
+      preview.appendChild(itemInfo);
+    }
 
-    const itemWeight = document.createElement('div');
-    itemWeight.classList.add(classes.itemWeight);
-    itemWeight.appendChild(document.createTextNode(`${item.weight}`));
-    itemInfo.appendChild(itemWeight);
-    preview.appendChild(itemInfo);
 
     const itemImage = document.createElement('IMG');
     itemImage.classList.add(classes.itemImage);

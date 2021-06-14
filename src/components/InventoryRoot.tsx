@@ -1,6 +1,6 @@
 import { makeStyles, Theme } from "@material-ui/core";
 import React from "react";
-import { ContainerStateType, usePrimaryContainerState, useSecondaryContainerState } from "../state/container.state";
+import { ContainerStateType, usePrimaryContainerState, useSecondaryContainerState, useSetPrimaryContainerState, useSetSecondaryContainerState } from "../state/container.state";
 import Container from "./Container/Container";
 
 const useStyles = makeStyles( (theme:Theme) => ({
@@ -20,6 +20,7 @@ const InventoryRoot: React.FC = () => {
   const classes = useStyles();
   const primaryContainerState = usePrimaryContainerState();
   const secondaryContainerState = useSecondaryContainerState();
+
 
   return (
     <div className={classes.inventoryRoot}>

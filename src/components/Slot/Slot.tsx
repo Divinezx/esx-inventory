@@ -4,6 +4,7 @@ import { IItem, SlotType } from "../../state/container.state";
 import { Item } from "./Item";
 import { useItemDrag, useSetItemDrag } from "../../state/dragItem.state";
 import { usePreviewDrag } from "../../hooks/usePreviewDrag";
+import { useIsShowMenu, useSetMenuPosition, useSetShowMenu, useSetShowUseOption } from "../../state/contextMenu.state";
 
 interface SlotProps {
   slotNumber: number
@@ -44,12 +45,24 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
   const [slotItem, setSlotItem] = useState<IItem>(item);
   const { createPreview, removePreview } = usePreviewDrag();
   const [itemDragInfo, setItemDragInfo] = [useItemDrag(), useSetItemDrag()];
+  const setShowMenu = useSetShowMenu();
+  const setShowUse = useSetShowUseOption();
+  const setMenuPosition = useSetMenuPosition();
+  const isContextMenuVisible = useIsShowMenu();
 
   const handleOnDragStart = (e) => {
     if (!slotItem) { e.preventDefault(); return }
 
     const { x , y, width, height } = slotRef.current.getBoundingClientRect();
-    const moveItem = {...slotItem, amount: 2};
+    let amountToMove = slotItem.amount;
+    if (e.shiftKey) {
+      amountToMove = 0;
+    }
+    if (e.ctrlKey) {
+      amountToMove = 1;
+    }
+
+    const moveItem = {...slotItem, amount: amountToMove};
     e.dataTransfer.setDragImage(createPreview(moveItem, width, height), e.clientX - x, e.clientY - y);
     setItemDragInfo({slotItem: slotItem, setSlotItem: setSlotItem, slotNumber: slotNumber, containerId: containerId, moveItem: moveItem});
     slotRef.current.style.opacity = 0.4;
@@ -76,10 +89,31 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
     const fromSetSlotItem = itemDragInfo.setSlotItem;
     const fromSlotNumber = itemDragInfo.slotNumber;
     const fromContainerId = itemDragInfo.containerId;
-    const moveItem = itemDragInfo.moveItem;
+    let moveItem = itemDragInfo.moveItem;
 
     if (slotItem && slotItem.label !== moveItem.label) return;
     if (slotNumber === fromSlotNumber) return;
+
+    //NUICallBack
+
+    //if succeed
+
+
+
+    if (moveItem.amount === 0) {
+      //ask for amount
+      const amount = window.prompt("Enter the amount: ");
+      if (amount === null || amount === "") return;
+      if (parseInt(amount) >= fromSlotItem.amount) {
+        console.log("Amount exceed current item amount.");
+        return;
+      }
+      if (parseInt(amount) <= 0) {
+        console.log("Amount should be a positive number.");
+        return;
+      }
+      moveItem = {...moveItem, amount: parseInt(amount)}
+    }
 
     // Update fromSlot
     const remainingAmount = fromSlotItem.amount - moveItem.amount;
@@ -108,6 +142,22 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
     slotRef.current.classList.remove(classes.over);
   }
 
+  const handleOnContextMenu = (e) => {
+    if (!slotItem) return;
+
+    setShowUse(slotItem.usable);
+    setMenuPosition({x: e.clientX, y: e.clientY});
+    setShowMenu(true);
+  }
+
+  const handleOnClick = (e) => {
+    isContextMenuVisible && setShowMenu(false);
+  }
+
+  const handleOnDoubleClick = (e) => {
+    console.log("USE/EQUIP");
+  }
+
 
   return  (
     <div draggable
@@ -119,6 +169,9 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
       onDrop={handleOnDrop}
       onDragEnter={handleOnDragEnter}
       onDragLeave={handleOnDragLeave}
+      onContextMenu={handleOnContextMenu}
+      onClick={handleOnClick}
+      onDoubleClick={handleOnDoubleClick}
     >
       { hotbar ? <div className={classes.hotbarSlotNumber}>{slotNumber}</div> : undefined }
       { slotItem ? <Item item={slotItem} setSlotItem={setSlotItem} slotNumber={slotNumber} /> : undefined }

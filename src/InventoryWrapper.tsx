@@ -4,6 +4,7 @@ import { useNuiService } from './hooks/useNuiService';
 import { useNuiListenerService } from './hooks/useNuiListenerService';
 import { useIsMenuVisible } from "./state/visibility.state";
 import InventoryRoot from "./components/InventoryRoot";
+import ContextMenu from './components/ContextMenu/ContextMenu';
 
 setTimeout(() => {
   window.dispatchEvent(
@@ -89,6 +90,7 @@ const InventoryWrapper: React.FC = () => {
   return (
     <div className="App" style={styled}>
       <InventoryRoot />
+      <ContextMenu />
     </div>
   );
 
