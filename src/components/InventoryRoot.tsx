@@ -24,8 +24,8 @@ const InventoryRoot: React.FC = () => {
 
   return (
     <div className={classes.inventoryRoot}>
-      {(primaryContainerState != null) ? <Container container={primaryContainerState} containerType={ContainerStateType.PRIMARY} /> : undefined}
-      {(secondaryContainerState != null) ? <Container container={secondaryContainerState} containerType={ContainerStateType.SECONDARY} /> : undefined}
+      {primaryContainerState && <Container container={primaryContainerState} containerType={ContainerStateType.PRIMARY} /> }
+      {secondaryContainerState && <Container container={secondaryContainerState} containerType={ContainerStateType.SECONDARY} /> }
     </div>
   );
 }

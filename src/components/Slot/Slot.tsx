@@ -173,8 +173,8 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
       onClick={handleOnClick}
       onDoubleClick={handleOnDoubleClick}
     >
-      { hotbar ? <div className={classes.hotbarSlotNumber}>{slotNumber}</div> : undefined }
-      { slotItem ? <Item item={slotItem} /> : undefined }
+      { hotbar && <div className={classes.hotbarSlotNumber}>{slotNumber}</div> }
+      { slotItem && <Item item={slotItem} /> }
     </div>
   );
 }

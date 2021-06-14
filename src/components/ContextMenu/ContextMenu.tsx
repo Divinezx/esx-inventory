@@ -1,4 +1,4 @@
-import { makeStyles, Theme, ThemeProvider } from "@material-ui/core";
+import { makeStyles, Theme } from "@material-ui/core";
 import React from "react";
 import { useEffect, useCallback } from "react";
 import { useIsShowMenu, useIsShowUseOption, useMenuPosition, useSetShowMenu } from "../../state/contextMenu.state";
@@ -36,7 +36,7 @@ const ContextMenu: React.FC = () => {
 
   const handleClick = useCallback(() => {
     showMenu && setShowMenu(false);
-  }, [showMenu]);
+  }, [showMenu, setShowMenu]);
 
   useEffect(() => {
     document.addEventListener("click", handleClick);
@@ -62,24 +62,22 @@ const ContextMenu: React.FC = () => {
 
   return (
     <div>
-      {showMenu ? (
-            <div
-              className={classes.contextMenu}
-              style={{
-                position: 'absolute',
-                top: menuPosition.y + 'px',
-                left: menuPosition.x + 'px',
-              }}
-            >
-              <ul >
-                { showUse ? <li onClick={handleOnUse} className={classes.listItem}>Use</li> : undefined }
-                <li onClick={handleOnGive} className={classes.listItem}>Give</li>
-                <li onClick={handleOnDrop} className={classes.listItem}>Drop</li>
-              </ul>
-            </div>
-          ) : (
-            <></>
-          )}
+      {showMenu && (
+          <div
+            className={classes.contextMenu}
+            style={{
+              position: 'absolute',
+              top: menuPosition.y + 'px',
+              left: menuPosition.x + 'px',
+            }}
+          >
+            <ul >
+              { showUse && <li onClick={handleOnUse} className={classes.listItem}>Use</li> }
+              <li onClick={handleOnGive} className={classes.listItem}>Give</li>
+              <li onClick={handleOnDrop} className={classes.listItem}>Drop</li>
+            </ul>
+          </div>
+        )}
     </div>
   );
 }
