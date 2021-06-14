@@ -1,18 +1,15 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { makeStyles, Theme } from "@material-ui/core";
 import { IItem, SlotType } from "../../state/container.state";
+import { Item } from "./Item";
+import { useItemDrag, useSetItemDrag } from "../../state/dragItem.state";
+import { usePreviewDrag } from "../../hooks/usePreviewDrag";
 
-interface EmptyHotbarProps {
+interface SlotProps {
   slotNumber: number
-}
-
-interface HotbarProps {
-  item: IItem
-  slotNumber: number
-}
-
-interface Props {
-  item: IItem
+  containerId: number
+  hotbar?: boolean
+  item?: IItem
 }
 
 const useStyles = makeStyles( (theme:Theme) => ({
@@ -20,7 +17,10 @@ const useStyles = makeStyles( (theme:Theme) => ({
     position: 'relative',
     border: `1px solid ${theme.inventory.borderColor}`,
     borderRadius: '5px',
-    color: theme.inventory.textColor
+    color: theme.inventory.textColor,
+    "& *": {
+      pointerEvents: 'none'
+    }
   },
   hotbarSlotNumber: {
     position: 'absolute',
@@ -31,98 +31,97 @@ const useStyles = makeStyles( (theme:Theme) => ({
     borderRadius: '0px 0px 4px',
     fontSize: '0.85rem'
   },
-  itemInfo: {
-    position: 'absolute',
-    right: '3px',
-    textAlign: 'right'
-  },
-
-  itemLabel: {
-    position: 'absolute',
-    width: '100%',
-    borderTop: `1px solid ${theme.inventory.borderColor}`,
-    bottom: '0',
-    textAlign: 'center',
-    fontSize: '0.85rem',
-    fontWeight: 600,
-    backgroundColor: theme.inventory.hoverColor,
-    textTransform: 'capitalize',
-  },
-  itemAmount: {
-    fontSize: '0.85rem',
-    color: theme.inventory.secondaryTextColor
-  },
-  itemWeight: {
-    fontSize: '0.65rem',
-  },
-  itemImage: {
-    position: 'absolute',
-    width: 'auto',
-    height: '75%',
-    top: '0',
-    bottom: '0',
-    left: '0',
-    right: '0',
-    margin: 'auto'
+  over: {
+    border: '2px dashed #666'
   }
 }));
 
-export const EmptySlot: React.FC = () => {
+
+export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item}) => {
 
   const classes = useStyles();
+  const slotRef = useRef();
+  const [slotItem, setSlotItem] = useState<IItem>(item);
+  const { createPreview, removePreview } = usePreviewDrag();
+  const [itemDragInfo, setItemDragInfo] = [useItemDrag(), useSetItemDrag()];
+
+  const handleOnDragStart = (e) => {
+    if (!slotItem) { e.preventDefault(); return }
+
+    const { x , y, width, height } = slotRef.current.getBoundingClientRect();
+    const moveItem = {...slotItem, amount: 2};
+    e.dataTransfer.setDragImage(createPreview(moveItem, width, height), e.clientX - x, e.clientY - y);
+    setItemDragInfo({slotItem: slotItem, setSlotItem: setSlotItem, slotNumber: slotNumber, containerId: containerId, moveItem: moveItem});
+    slotRef.current.style.opacity = 0.4;
+  }
+
+  const handleOnDragEnd = (e) => {
+
+    slotRef.current.style.opacity = 1;
+    removePreview();
+  }
+
+  const handleOnDragOver = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
+  const handleOnDrop = (e) => {
+    e.preventDefault();
+    if(itemDragInfo === null) return;
+
+    slotRef.current.classList.remove(classes.over);
+
+    const fromSlotItem = itemDragInfo.slotItem;
+    const fromSetSlotItem = itemDragInfo.setSlotItem;
+    const fromSlotNumber = itemDragInfo.slotNumber;
+    const fromContainerId = itemDragInfo.containerId;
+    const moveItem = itemDragInfo.moveItem;
+
+    if (slotItem && slotItem.label !== moveItem.label) return;
+    if (slotNumber === fromSlotNumber) return;
+
+    // Update fromSlot
+    const remainingAmount = fromSlotItem.amount - moveItem.amount;
+    if (remainingAmount === 0) {
+      fromSetSlotItem(null);
+    } else {
+      fromSetSlotItem({...moveItem, amount: remainingAmount});
+    }
+
+    // Update toSlot
+    if (slotItem) {
+      setSlotItem({...slotItem, amount: slotItem.amount + moveItem.amount})
+    } else {
+      setSlotItem(moveItem);
+    }
+
+
+
+  }
+
+  const handleOnDragEnter = (e) => {
+    slotRef.current.classList.add(classes.over);
+  }
+
+  const handleOnDragLeave = (e) => {
+    slotRef.current.classList.remove(classes.over);
+  }
+
 
   return  (
-    <div className={classes.slot} >
-
-    </div>
-  );
-}
-
-export const Slot: React.FC<Props> = ({item}) => {
-
-  const classes = useStyles();
-
-  console.log(item.slotType === SlotType.NORMAL);
-
-  return  (
-    <div className={classes.slot} >
-      <div className={classes.itemInfo}>
-        <div className={classes.itemAmount}>{item.amount}</div>
-        <div className={classes.itemWeight}>{item.weight}</div>
-      </div>
-      <img className={classes.itemImage} src={`images/${item.label}.png`} alt="Item"/>
-      <div className={classes.itemLabel}>{item.label}</div>
-    </div>
-  );
-}
-
-
-export const EmptyHotbarSlot: React.FC<EmptyHotbarProps> = ({slotNumber}) => {
-
-  const classes = useStyles();
-
-  return  (
-    <div className={classes.slot} >
-      <div className={classes.hotbarSlotNumber}>{slotNumber}</div>
-    </div>
-  );
-}
-
-export const HotbarSlot: React.FC<HotbarProps> = ({item, slotNumber}) => {
-
-  const classes = useStyles();
-
-  console.log(item.slotType === SlotType.NORMAL);
-
-  return  (
-    <div className={classes.slot} >
-      <div className={classes.hotbarSlotNumber}>{slotNumber}</div>
-      <div className={classes.itemInfo}>
-        <div className={classes.itemAmount}>{item.amount}</div>
-        <div className={classes.itemWeight}>{item.weight}</div>
-      </div>
-      <img className={classes.itemImage} src={`images/${item.label}.png`} alt="Item"/>
-      <div className={classes.itemLabel}>{item.label}</div>
+    <div draggable
+      ref={slotRef}
+      className={classes.slot}
+      onDragStart={handleOnDragStart}
+      onDragEnd={handleOnDragEnd}
+      onDragOver={handleOnDragOver}
+      onDrop={handleOnDrop}
+      onDragEnter={handleOnDragEnter}
+      onDragLeave={handleOnDragLeave}
+    >
+      { hotbar ? <div className={classes.hotbarSlotNumber}>{slotNumber}</div> : undefined }
+      { slotItem ? <Item item={slotItem} setSlotItem={setSlotItem} slotNumber={slotNumber} /> : undefined }
     </div>
   );
 }

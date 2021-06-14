@@ -2,12 +2,13 @@ import React from "react";
 import { makeStyles, Theme } from "@material-ui/core";
 import SlotWrapper from "../Slot/SlotWrapper";
 import ContainerHeader from "./ContainerHeader";
-import { IContainer } from "../../state/container.state";
+import { ContainerStateType, IContainer } from "../../state/container.state";
 
 
 
 interface Props {
   container: IContainer
+  containerType: ContainerStateType
 };
 
 const useStyles = makeStyles( (theme:Theme) => ({
@@ -33,7 +34,7 @@ const useStyles = makeStyles( (theme:Theme) => ({
 
 
 
-const Container: React.FC<Props> = ({container}) => {
+const Container: React.FC<Props> = ({container, containerType}) => {
 
   const classes = useStyles();
 
@@ -47,7 +48,7 @@ const Container: React.FC<Props> = ({container}) => {
         currentWeight = {container.currentWeight}
       />
       <hr className={classes.separator}/>
-      <SlotWrapper slots = {container.slots} inventory= {container.inventory}/>
+      <SlotWrapper slots = {container.slots} inventory={container.inventory} containerType={containerType} containerId={container.id}/>
     </div>
   );
 }

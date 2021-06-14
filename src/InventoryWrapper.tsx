@@ -12,6 +12,7 @@ setTimeout(() => {
         app: 'inventory',
           method: 'setPrimaryContainer',
           data: {
+            id: "12312312",
             slots: 35,
             type: "player",
             maxCapacity: 50,
@@ -20,6 +21,15 @@ setTimeout(() => {
             currentWeight: 0,
             inventory: {
               5: {
+                slotType: "normal",
+                itemType: "food",
+                label: "Burger",
+                amount: 4,
+                weight: 0.1,
+                usable: true,
+                metadata: {}
+              },
+              6: {
                 slotType: "normal",
                 itemType: "food",
                 label: "Burger",
@@ -42,6 +52,7 @@ setTimeout(() => {
         app: 'inventory',
           method: 'setSecondaryContainer',
           data: {
+            id: "111111",
             slots: 5,
             type: "trunk",
             maxCapacity: 55,

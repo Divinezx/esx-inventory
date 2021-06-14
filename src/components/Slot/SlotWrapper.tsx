@@ -1,11 +1,13 @@
 import React from "react";
-import { Slot, EmptySlot, HotbarSlot, EmptyHotbarSlot } from "./Slot";
+import { Slot } from "./Slot";
 import { makeStyles, Theme } from "@material-ui/core";
-import { IItem } from "../../state/container.state";
+import { ContainerStateType, IItem } from "../../state/container.state";
 
 interface Props {
   slots: number
   inventory:  {[key: number]: IItem}
+  containerType: ContainerStateType
+  containerId: number
 };
 
 const useStyles = makeStyles( (theme:Theme) => ({
@@ -20,26 +22,54 @@ const useStyles = makeStyles( (theme:Theme) => ({
   }
 }));
 
+const setPrimarySlots = (slots: number, inventory:{[key: number]: IItem}, containerId:number) => {
+  const inventorySlots:JSX.Element[] = []
+
+  for (let i=1; i <= 5 && i <= slots; i++) {
+    if (inventory != null && inventory[i] != null) {
+      inventorySlots.push(<Slot key={i} slotNumber={i} item={inventory[i]} containerId={containerId} hotbar/>)
+    } else {
+      inventorySlots.push(<Slot key={i} slotNumber={i} containerId={containerId} hotbar/>)
+    }
+  }
+
+  for (let i=6; i <= slots; i++) {
+    if (inventory != null && inventory[i] != null) {
+      inventorySlots.push(<Slot key={i} slotNumber={i} item={inventory[i]} containerId={containerId}/>)
+    } else {
+      inventorySlots.push(<Slot key={i} slotNumber={i} containerId={containerId}/>)
+    }
+  }
+
+  return inventorySlots;
+};
+
+const setSecondarySlots = (slots: number, inventory:{[key: number]: IItem}, containerId:number) => {
+  const inventorySlots:JSX.Element[] = []
+
+  for (let i=1; i <= slots; i++) {
+    if (inventory != null && inventory[i] != null) {
+      inventorySlots.push(<Slot key={i} slotNumber={i} item={inventory[i]} containerId={containerId}/>)
+    } else {
+      inventorySlots.push(<Slot key={i} slotNumber={i} containerId={containerId}/>)
+    }
+  }
+
+  return inventorySlots;
+}
 
 
-const SlotWrapper: React.FC<Props> = ({slots, inventory}) => {
+
+const SlotWrapper: React.FC<Props> = ({slots, inventory, containerType, containerId}) => {
 
   const classes = useStyles();
 
-  const inventorySlots:JSX.Element[] = []
-  for (let i=1; i <= 5; i++) {
-    if (inventory != null && inventory[i] != null) {
-      inventorySlots.push(<HotbarSlot key={i} item={inventory[i]} slotNumber={i}/>)
-    } else {
-      inventorySlots.push(<EmptyHotbarSlot key={i} slotNumber={i}/>)
-    }
-  }
-  for (let i=6; i <= slots; i++) {
-    if (inventory != null && inventory[i] != null) {
-      inventorySlots.push(<Slot key={i} item={inventory[i]}/>)
-    } else {
-      inventorySlots.push(<EmptySlot key={i}/>)
-    }
+  let inventorySlots:JSX.Element[] = []
+
+  if (containerType === ContainerStateType.PRIMARY) {
+    inventorySlots = setPrimarySlots(slots, inventory, containerId);
+  } else if (containerType === ContainerStateType.SECONDARY) {
+    inventorySlots = setSecondarySlots(slots,inventory, containerId);
   }
 
 
