@@ -4,8 +4,6 @@ import { IItem } from "../../state/container.state";
 
 interface ItemProps {
   item: IItem
-  setSlotItem: any
-  slotNumber: number
 }
 
 export const useStyles = makeStyles( (theme:Theme) => ({
@@ -51,7 +49,7 @@ export const useStyles = makeStyles( (theme:Theme) => ({
 }));
 
 
-export const Item: React.FC<ItemProps> = ({item, setSlotItem, slotNumber}) => {
+export const Item: React.FC<ItemProps> = ({item}) => {
 
   const classes = useStyles();
 

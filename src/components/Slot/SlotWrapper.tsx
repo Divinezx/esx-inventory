@@ -22,10 +22,12 @@ const useStyles = makeStyles( (theme:Theme) => ({
   }
 }));
 
+const HOTBAR_SLOTS = 5;
+
 const setPrimarySlots = (slots: number, inventory:{[key: number]: IItem}, containerId:number) => {
   const inventorySlots:JSX.Element[] = []
 
-  for (let i=1; i <= 5 && i <= slots; i++) {
+  for (let i=1; i <= HOTBAR_SLOTS && i <= slots; i++) {
     if (inventory != null && inventory[i] != null) {
       inventorySlots.push(<Slot key={i} slotNumber={i} item={inventory[i]} containerId={containerId} hotbar/>)
     } else {
