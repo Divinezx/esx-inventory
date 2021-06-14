@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { makeStyles, Theme } from "@material-ui/core";
-import { IItem, SlotType } from "../../state/container.state";
+import { IItem } from "../../state/container.state";
 import { Item } from "./Item";
 import { useItemDrag, useSetItemDrag } from "../../state/dragItem.state";
 import { usePreviewDrag } from "../../hooks/usePreviewDrag";
@@ -41,8 +41,8 @@ const useStyles = makeStyles( (theme:Theme) => ({
 export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item}) => {
 
   const classes = useStyles();
-  const slotRef = useRef();
-  const [slotItem, setSlotItem] = useState<IItem>(item);
+  const slotRef = useRef() as React.MutableRefObject<HTMLInputElement>;
+  const [slotItem, setSlotItem] = useState<IItem | undefined>(item);
   const { createPreview, removePreview } = usePreviewDrag();
   const [itemDragInfo, setItemDragInfo] = [useItemDrag(), useSetItemDrag()];
   const setShowMenu = useSetShowMenu();
@@ -53,7 +53,7 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
   const handleOnDragStart = (e) => {
     if (!slotItem) { e.preventDefault(); return }
 
-    const { x , y, width, height } = slotRef.current.getBoundingClientRect();
+    const { x , y, width, height } = slotRef.current!.getBoundingClientRect();
     let amountToMove = slotItem.amount;
     if (e.shiftKey) {
       amountToMove = 0;
@@ -65,12 +65,12 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
     const moveItem = {...slotItem, amount: amountToMove};
     e.dataTransfer.setDragImage(createPreview(moveItem, width, height), e.clientX - x, e.clientY - y);
     setItemDragInfo({slotItem: slotItem, setSlotItem: setSlotItem, slotNumber: slotNumber, containerId: containerId, moveItem: moveItem});
-    slotRef.current.style.opacity = 0.4;
+    slotRef.current!.style.opacity = '0.4';
   }
 
   const handleOnDragEnd = (e) => {
 
-    slotRef.current.style.opacity = 1;
+    slotRef.current!.style.opacity = '1';
     removePreview();
   }
 
@@ -83,7 +83,7 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
     e.preventDefault();
     if(itemDragInfo === null) return;
 
-    slotRef.current.classList.remove(classes.over);
+    slotRef.current!.classList.remove(classes.over);
 
     const fromSlotItem = itemDragInfo.slotItem;
     const fromSetSlotItem = itemDragInfo.setSlotItem;
@@ -118,7 +118,7 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
     // Update fromSlot
     const remainingAmount = fromSlotItem.amount - moveItem.amount;
     if (remainingAmount === 0) {
-      fromSetSlotItem(null);
+      fromSetSlotItem(undefined);
     } else {
       fromSetSlotItem({...moveItem, amount: remainingAmount});
     }
@@ -135,11 +135,11 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
   }
 
   const handleOnDragEnter = (e) => {
-    slotRef.current.classList.add(classes.over);
+    slotRef.current!.classList.add(classes.over);
   }
 
   const handleOnDragLeave = (e) => {
-    slotRef.current.classList.remove(classes.over);
+    slotRef.current!.classList.remove(classes.over);
   }
 
   const handleOnContextMenu = (e) => {
@@ -174,7 +174,7 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
       onDoubleClick={handleOnDoubleClick}
     >
       { hotbar ? <div className={classes.hotbarSlotNumber}>{slotNumber}</div> : undefined }
-      { slotItem ? <Item item={slotItem} setSlotItem={setSlotItem} slotNumber={slotNumber} /> : undefined }
+      { slotItem ? <Item item={slotItem} /> : undefined }
     </div>
   );
 }

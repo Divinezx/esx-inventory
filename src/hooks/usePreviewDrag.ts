@@ -5,7 +5,7 @@ import { IItem } from '../state/container.state';
 
 export const usePreviewDrag = () => {
 
-  const previewRef = useRef(null);
+  const previewRef = useRef<HTMLDivElement | null>(null);
   const classes = useStyles();
 
 

@@ -17,11 +17,12 @@ export interface IItem {
   label: string,
   amount: number,
   weight: number,
-  usabele: boolean,
+  usable: boolean,
   metadata: {[key: string]: any}
 };
 
 export interface IContainer {
+  id: number,
   slots: number,
   type: ContainerType,
   maxCapacity: number,
