@@ -26,7 +26,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
   }
 }
 
-export const MenuTheme = createMuiTheme({
+export const InventoryTheme = createMuiTheme({
   palette: {
     type: "dark",
     primary: {

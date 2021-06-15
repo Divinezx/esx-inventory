@@ -5,6 +5,7 @@ import { useNuiListenerService } from './hooks/useNuiListenerService';
 import { useIsMenuVisible } from "./state/visibility.state";
 import InventoryRoot from "./components/InventoryRoot";
 import ContextMenu from './components/ContextMenu/ContextMenu';
+import { DialogProvider } from './providers/DialogProvider';
 
 setTimeout(() => {
   window.dispatchEvent(
@@ -88,10 +89,12 @@ const InventoryWrapper: React.FC = () => {
   const styled = visible ? { height: '100vh', opacity: 1 } : undefined;
 
   return (
-    <div className="App" style={styled}>
-      <InventoryRoot />
-      <ContextMenu />
-    </div>
+    <DialogProvider>
+      <div className="App" style={styled}>
+        <InventoryRoot />
+        <ContextMenu />
+      </div>
+    </DialogProvider>
   );
 
 };

@@ -28,7 +28,7 @@ const setPrimarySlots = (slots: number, inventory:{[key: number]: IItem}, contai
   const inventorySlots:JSX.Element[] = []
 
   for (let i=1; i <= HOTBAR_SLOTS && i <= slots; i++) {
-    if (inventory != null && inventory[i] != null) {
+    if (inventory && inventory[i]) {
       inventorySlots.push(<Slot key={i} slotNumber={i} item={inventory[i]} containerId={containerId} hotbar/>)
     } else {
       inventorySlots.push(<Slot key={i} slotNumber={i} containerId={containerId} hotbar/>)
@@ -36,7 +36,7 @@ const setPrimarySlots = (slots: number, inventory:{[key: number]: IItem}, contai
   }
 
   for (let i=6; i <= slots; i++) {
-    if (inventory != null && inventory[i] != null) {
+    if (inventory && inventory[i]) {
       inventorySlots.push(<Slot key={i} slotNumber={i} item={inventory[i]} containerId={containerId}/>)
     } else {
       inventorySlots.push(<Slot key={i} slotNumber={i} containerId={containerId}/>)
@@ -50,7 +50,7 @@ const setSecondarySlots = (slots: number, inventory:{[key: number]: IItem}, cont
   const inventorySlots:JSX.Element[] = []
 
   for (let i=1; i <= slots; i++) {
-    if (inventory != null && inventory[i] != null) {
+    if (inventory && inventory[i]) {
       inventorySlots.push(<Slot key={i} slotNumber={i} item={inventory[i]} containerId={containerId}/>)
     } else {
       inventorySlots.push(<Slot key={i} slotNumber={i} containerId={containerId}/>)

@@ -27,6 +27,7 @@ export const useStyles = makeStyles( (theme:Theme) => ({
     fontWeight: 600,
     backgroundColor: theme.inventory.hoverColor,
     textTransform: 'capitalize',
+    color: theme.inventory.textColor
   },
   itemAmount: {
     fontSize: '0.85rem',
@@ -53,11 +54,14 @@ export const Item: React.FC<ItemProps> = ({item}) => {
 
   const classes = useStyles();
 
+  const stackedAmount = item.weight * item.amount
+  const toFixedAmount = Math.round(stackedAmount*100)/100;
+
   return  (
     <div className={classes.item}>
       <div className={classes.itemInfo}>
         <div className={classes.itemAmount} id={'itemAmount'}>{item.amount}</div>
-        <div className={classes.itemWeight} id={'itemWeight'}>{item.weight}</div>
+        <div className={classes.itemWeight} id={'itemWeight'}>{toFixedAmount}</div>
       </div>
       <img className={classes.itemImage} src={`images/${item.label}.png`} alt="Item"/>
       <div className={classes.itemLabel}>{item.label}</div>

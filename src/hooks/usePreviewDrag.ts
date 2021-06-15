@@ -21,12 +21,15 @@ export const usePreviewDrag = () => {
 
       const itemAmount = document.createElement('div');
       itemAmount.classList.add(classes.itemAmount);
+
       itemAmount.appendChild(document.createTextNode(`${item.amount}`));
       itemInfo.appendChild(itemAmount);
 
       const itemWeight = document.createElement('div');
       itemWeight.classList.add(classes.itemWeight);
-      itemWeight.appendChild(document.createTextNode(`${item.weight}`));
+      const stackedAmount = item.weight * item.amount
+      const toFixedAmount = Math.round(stackedAmount*100)/100;
+      itemWeight.appendChild(document.createTextNode(`${toFixedAmount}`));
       itemInfo.appendChild(itemWeight);
       preview.appendChild(itemInfo);
     }

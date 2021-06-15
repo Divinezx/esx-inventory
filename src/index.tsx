@@ -4,12 +4,12 @@ import InventoryWrapper from './InventoryWrapper';
 import reportWebVitals from './reportWebVitals';
 import { RecoilRoot } from 'recoil';
 import { MuiThemeProvider } from "@material-ui/core";
-import { MenuTheme } from "./styles/theme";
+import { InventoryTheme } from "./styles/theme";
 
 ReactDOM.render(
   <React.StrictMode>
     <RecoilRoot>
-      <MuiThemeProvider theme={MenuTheme}>
+      <MuiThemeProvider theme={InventoryTheme}>
         <InventoryWrapper />
       </MuiThemeProvider>
     </RecoilRoot>

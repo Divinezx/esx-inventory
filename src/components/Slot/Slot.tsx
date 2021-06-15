@@ -4,7 +4,8 @@ import { IItem } from "../../state/container.state";
 import { Item } from "./Item";
 import { useItemDrag, useSetItemDrag } from "../../state/dragItem.state";
 import { usePreviewDrag } from "../../hooks/usePreviewDrag";
-import { useIsShowMenu, useSetMenuPosition, useSetShowMenu, useSetShowUseOption } from "../../state/contextMenu.state";
+import { useSetMenuPosition, useSetShowMenu, useSetShowUseOption } from "../../state/contextMenu.state";
+import { useDialogContext } from "../../providers/DialogProvider";
 
 interface SlotProps {
   slotNumber: number
@@ -19,6 +20,9 @@ const useStyles = makeStyles( (theme:Theme) => ({
     border: `1px solid ${theme.inventory.borderColor}`,
     borderRadius: '5px',
     color: theme.inventory.textColor,
+    "&$slot:hover": {
+      border: `1px solid ${theme.inventory.textColor}`,
+    },
     "& *": {
       pointerEvents: 'none'
     }
@@ -48,7 +52,36 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
   const setShowMenu = useSetShowMenu();
   const setShowUse = useSetShowUseOption();
   const setMenuPosition = useSetMenuPosition();
-  const isContextMenuVisible = useIsShowMenu();
+  const { openDialog } = useDialogContext();
+
+
+  const handleMoveItem = (fromSlotItem, fromSetSlotItem, fromSlotNumber, fromContainerId, moveItem) => {
+    const remainingAmount = fromSlotItem.amount - moveItem.amount;
+    if (remainingAmount === 0) {
+      fromSetSlotItem(undefined);
+    } else {
+      fromSetSlotItem({...moveItem, amount: remainingAmount});
+    }
+
+    // Update toSlot
+    if (slotItem) {
+      setSlotItem({...slotItem, amount: slotItem.amount + moveItem.amount})
+    } else {
+      setSlotItem(moveItem);
+    }
+  }
+
+  const handleAskForAmount = (fromSlotItem, fromSetSlotItem, fromSlotNumber, fromContainerId, moveItem) => {
+    openDialog({
+      title:  "Input the amount",
+      placeholder: "Amount",
+      type: "number",
+      onSubmit: (amount: string) => {
+        if(fromSlotItem.amount < parseInt(amount) || parseInt(amount) <= 0) return;
+        handleMoveItem(fromSlotItem, fromSetSlotItem, fromSlotNumber, fromContainerId, {...moveItem, amount: parseInt(amount)});
+      },
+    });
+  };
 
   const handleOnDragStart = (e) => {
     if (!slotItem) { e.preventDefault(); return }
@@ -97,41 +130,11 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
     //NUICallBack
 
     //if succeed
-
-
-
     if (moveItem.amount === 0) {
-      //ask for amount
-      const amount = window.prompt("Enter the amount: ");
-      if (amount === null || amount === "") return;
-      if (parseInt(amount) >= fromSlotItem.amount) {
-        console.log("Amount exceed current item amount.");
-        return;
-      }
-      if (parseInt(amount) <= 0) {
-        console.log("Amount should be a positive number.");
-        return;
-      }
-      moveItem = {...moveItem, amount: parseInt(amount)}
+      handleAskForAmount(fromSlotItem, fromSetSlotItem, fromSlotNumber, fromContainerId, moveItem);
+      return;
     }
-
-    // Update fromSlot
-    const remainingAmount = fromSlotItem.amount - moveItem.amount;
-    if (remainingAmount === 0) {
-      fromSetSlotItem(undefined);
-    } else {
-      fromSetSlotItem({...moveItem, amount: remainingAmount});
-    }
-
-    // Update toSlot
-    if (slotItem) {
-      setSlotItem({...slotItem, amount: slotItem.amount + moveItem.amount})
-    } else {
-      setSlotItem(moveItem);
-    }
-
-
-
+    handleMoveItem(fromSlotItem, fromSetSlotItem, fromSlotNumber, fromContainerId, moveItem);
   }
 
   const handleOnDragEnter = (e) => {
@@ -150,11 +153,9 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
     setShowMenu(true);
   }
 
-  const handleOnClick = (e) => {
-    isContextMenuVisible && setShowMenu(false);
-  }
-
   const handleOnDoubleClick = (e) => {
+    if (!slotItem) return;
+
     console.log("USE/EQUIP");
   }
 
@@ -170,7 +171,6 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
       onDragEnter={handleOnDragEnter}
       onDragLeave={handleOnDragLeave}
       onContextMenu={handleOnContextMenu}
-      onClick={handleOnClick}
       onDoubleClick={handleOnDoubleClick}
     >
       { hotbar && <div className={classes.hotbarSlotNumber}>{slotNumber}</div> }
