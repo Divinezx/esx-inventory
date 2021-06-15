@@ -18,7 +18,7 @@ export interface IItem {
   amount: number,
   weight: number,
   usable: boolean,
-  metadata: {[key: string]: any}
+  metadata: {[key: string]: string}
 };
 
 export interface IContainer {

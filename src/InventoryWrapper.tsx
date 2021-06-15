@@ -22,6 +22,19 @@ setTimeout(() => {
             currentCapacity: 0,
             currentWeight: 0,
             inventory: {
+              8: {
+                slotType: "normal",
+                itemType: "id",
+                label: "ID Card",
+                amount: 1,
+                weight: 0.1,
+                usable: true,
+                metadata: {
+                  description: "Your ID Card.",
+                  serial_number: "123-123-123",
+                  name: "John Doe"
+                }
+              },
               5: {
                 slotType: "normal",
                 itemType: "food",
@@ -29,7 +42,9 @@ setTimeout(() => {
                 amount: 4,
                 weight: 0.1,
                 usable: true,
-                metadata: {}
+                metadata: {
+                  description: "A cheeseburger."
+                }
               },
               6: {
                 slotType: "normal",
@@ -38,7 +53,9 @@ setTimeout(() => {
                 amount: 4,
                 weight: 0.1,
                 usable: true,
-                metadata: {}
+                metadata: {
+                  description: "A cheeseburger."
+                }
               }
             }
           }

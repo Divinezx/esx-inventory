@@ -38,8 +38,8 @@ export const useStyles = makeStyles( (theme:Theme) => ({
   },
   itemImage: {
     position: 'absolute',
-    width: 'auto',
-    height: '75%',
+    width: '90%',
+    height: 'auto',
     top: '0',
     bottom: '0',
     left: '0',

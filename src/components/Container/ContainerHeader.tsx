@@ -3,6 +3,7 @@ import { makeStyles, Theme } from "@material-ui/core";
 import { ContainerType } from "../../state/container.state";
 
 interface Props {
+  id: number,
   type: ContainerType,
   maxCapacity: number,
   maxWeight: number,
@@ -31,13 +32,19 @@ const useStyles = makeStyles( (theme:Theme) => ({
   },
 
   secondaryColor: {
-    color: theme.inventory.secondaryTextColor
+    color: theme.inventory.secondaryTextColor,
+    textTransform: 'capitalize'
+  },
+  containerId: {
+    fontSize: '0.65rem',
+    marginTop: '2px'
   }
 }));
 
 
 
 const ContainerHeader: React.FC<Props> = ({
+  id,
   type,
   maxCapacity,
   maxWeight,
@@ -50,8 +57,8 @@ const ContainerHeader: React.FC<Props> = ({
   return  (
     <div className={classes.containerHeader} >
       <div className={classes.leftInfo}>
-        <div className={classes.secondaryColor}>Inventory</div>
-        <div>Placeholder</div>
+        <div className={classes.secondaryColor}>{type}</div>
+        <div className={classes.containerId}>{id}</div>
       </div>
       <div className={classes.rightInfo}>
         <div >Capacity:</div>
