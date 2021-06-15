@@ -3,7 +3,6 @@ import { makeStyles, Theme } from "@material-ui/core";
 import SlotWrapper from "../Slot/SlotWrapper";
 import ContainerHeader from "./ContainerHeader";
 import { ContainerStateType, IContainer } from "../../state/container.state";
-import Tooltip from "../Tooltip/Tooltip";
 
 
 

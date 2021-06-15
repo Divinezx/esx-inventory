@@ -1,12 +1,11 @@
 import React, { useRef, useState } from "react";
-import { capitalize, makeStyles, Theme, Tooltip, Typography, withStyles } from "@material-ui/core";
+import { makeStyles, Theme, Tooltip, Typography, withStyles } from "@material-ui/core";
 import { IItem } from "../../state/container.state";
 import { Item } from "./Item";
 import { useItemDrag, useSetItemDrag } from "../../state/dragItem.state";
 import { usePreviewDrag } from "../../hooks/usePreviewDrag";
-import { useIsShowMenu, useSetMenuPosition, useSetShowMenu, useSetShowUseOption } from "../../state/contextMenu.state";
+import {  useSetMenuPosition, useSetShowMenu, useSetShowUseOption } from "../../state/contextMenu.state";
 import { useDialogContext } from "../../providers/DialogProvider";
-import { useEffect } from "react";
 
 interface SlotProps {
   slotNumber: number
@@ -219,7 +218,17 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
 
 
   return  (
-    <SlotTooltip open={tooltipOpen} onClose={handleTooltipClose} onOpen={handleTooltipOpen} enterDelay={1000} enterNextDelay={1000} title={slotItem ? buildTooltip(slotItem) : ""} disableTouchListener disableFocusListener placement='right'>
+    <SlotTooltip
+      open={tooltipOpen}
+      onClose={handleTooltipClose}
+      onOpen={handleTooltipOpen}
+      enterDelay={1000}
+      enterNextDelay={1000}
+      title={slotItem ? buildTooltip(slotItem) : ""}
+      disableTouchListener
+      disableFocusListener
+      placement='right'
+    >
       <div draggable
         ref={slotRef}
         className={classes.slot}
