@@ -10,7 +10,7 @@ interface Props {
   containerId: number
 };
 
-const useStyles = makeStyles( (theme:Theme) => ({
+export const useStylesSlotWrapper = makeStyles( (theme:Theme) => ({
   slotsWrapper: {
     position: 'relative',
     display: 'grid',
@@ -20,6 +20,23 @@ const useStyles = makeStyles( (theme:Theme) => ({
     gridGap: '5px',
     overflowY: 'auto',
     overflowX: 'hidden',
+    zIndex: 100,
+    [theme.breakpoints.up('720p')]: {
+      gridTemplateColumns: 'repeat(auto-fill, minmax(70px, 1fr))',
+      gridAutoRows: '85px',
+    },
+    [theme.breakpoints.up('1080p')]: {
+      gridTemplateColumns: 'repeat(5, minmax(90px, 1fr))',
+      gridAutoRows: '110px',
+    },
+    [theme.breakpoints.up('1440p')]: {
+      gridTemplateColumns: 'repeat(5, minmax(90px, 1fr))',
+      gridAutoRows: '140px',
+    },
+    [theme.breakpoints.up('2160p')]: {
+      gridTemplateColumns: 'repeat(5, minmax(90px, 1fr))',
+      gridAutoRows: '200px',
+    },
   }
 }));
 
@@ -65,7 +82,7 @@ const setSecondarySlots = (slots: number, inventory:{[key: number]: IItem}, cont
 
 const SlotWrapper: React.FC<Props> = ({slots, inventory, containerType, containerId}) => {
 
-  const classes = useStyles();
+  const classes = useStylesSlotWrapper();
 
   let inventorySlots:JSX.Element[] = []
 

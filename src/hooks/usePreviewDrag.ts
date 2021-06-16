@@ -14,6 +14,8 @@ export const usePreviewDrag = () => {
     preview.style.width = width + 'px';
     preview.style.height = height + 'px';
     preview.style.position = 'absolute';
+    preview.style.background = 'rgba(0,0,0,0.5)';
+    preview.style.borderRadius = '5px';
 
     if (item.amount > 0) {
       const itemInfo = document.createElement('div');
@@ -47,21 +49,12 @@ export const usePreviewDrag = () => {
     preview.appendChild(itemLabel);
 
     previewRef.current = preview;
-    //console.log(preview);
     return preview;
   };
 
-  const removePreview = () => {
-    if (previewRef.current === null) {
-      throw Error("PreviewRef was not previously created.");
-    }
-    document.body.removeChild(previewRef.current);
-    previewRef.current = null
-  };
 
 
-
-  return {createPreview, removePreview};
+  return createPreview;
 
 
 }
