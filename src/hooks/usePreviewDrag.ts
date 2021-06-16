@@ -48,7 +48,6 @@ export const usePreviewDrag = () => {
 
     previewRef.current = preview;
     //console.log(preview);
-    document.body.appendChild(preview);
     return preview;
   };
 

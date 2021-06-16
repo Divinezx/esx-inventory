@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { makeStyles, Theme, Tooltip, Typography, withStyles } from "@material-ui/core";
 import { IItem } from "../../state/container.state";
 import { Item } from "./Item";
@@ -6,7 +6,9 @@ import { useItemDrag, useSetItemDrag } from "../../state/dragItem.state";
 import { usePreviewDrag } from "../../hooks/usePreviewDrag";
 import {  useSetMenuPosition, useSetShowMenu, useSetShowUseOption } from "../../state/contextMenu.state";
 import { useDialogContext } from "../../providers/DialogProvider";
-import { Draggable, DragComponent, Droppable } from "react-dragtastic";
+import $ from 'jquery';
+import "jquery-ui/ui/widgets/draggable";
+import "jquery-ui/ui/widgets/droppable";
 
 interface SlotProps {
   slotNumber: number
@@ -120,71 +122,6 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
     });
   };
 
-  const handleOnDragStart = (e) => {
-    if (!slotItem) { e.preventDefault(); return }
-    handleTooltipClose();
-
-    const { x , y, width, height } = slotRef.current!.getBoundingClientRect();
-    let amountToMove = slotItem.amount;
-    if (e.shiftKey) {
-      amountToMove = 0;
-    }
-    if (e.ctrlKey) {
-      amountToMove = 1;
-    }
-
-    const moveItem = {...slotItem, amount: amountToMove};
-    //e.dataTransfer.setDragImage(createPreview(moveItem, width, height), e.clientX - x, e.clientY - y);
-    setItemDragInfo({slotItem: slotItem, setSlotItem: setSlotItem, slotNumber: slotNumber, containerId: containerId, moveItem: moveItem});
-    slotRef.current!.style.opacity = '0.4';
-    console.log("YEAH");
-  }
-
-  const handleOnDragEnd = (e) => {
-
-    slotRef.current!.style.opacity = '1';
-    removePreview();
-  }
-
-  const handleOnDragOver = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-  }
-
-  const handleOnDrop = (e) => {
-    e.preventDefault();
-    if(itemDragInfo === null) return;
-
-    slotRef.current!.classList.remove(classes.over);
-
-    const fromSlotItem = itemDragInfo.slotItem;
-    const fromSetSlotItem = itemDragInfo.setSlotItem;
-    const fromSlotNumber = itemDragInfo.slotNumber;
-    const fromContainerId = itemDragInfo.containerId;
-    let moveItem = itemDragInfo.moveItem;
-
-    if (slotItem && slotItem.label !== moveItem.label) return;
-    if (slotNumber === fromSlotNumber) return;
-
-    console.log("DROPPED");
-
-    //NUICallBack
-
-    //if succeed
-    if (moveItem.amount === 0) {
-      handleAskForAmount(fromSlotItem, fromSetSlotItem, fromSlotNumber, fromContainerId, moveItem);
-      return;
-    }
-    handleMoveItem(fromSlotItem, fromSetSlotItem, fromSlotNumber, fromContainerId, moveItem);
-  }
-
-  const handleOnDragEnter = (e) => {
-    slotRef.current!.classList.add(classes.over);
-  }
-
-  const handleOnDragLeave = (e) => {
-    slotRef.current!.classList.remove(classes.over);
-  }
 
   const handleOnContextMenu = (e) => {
     if (!slotItem) return;
@@ -220,45 +157,101 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
   </React.Fragment>)
   }
 
+  useEffect(() => {
+    if (slotItem) {
+      $(slotRef.current).draggable({
+        zIndex: 5000,
+        helper: function(e) {
+          let amountToMove = slotItem.amount;
+          if (e.shiftKey) {
+            amountToMove = 0;
+          }
+          if (e.ctrlKey) {
+            amountToMove = 1;
+          }
+
+          const { width, height } = slotRef.current!.getBoundingClientRect();
+          const moveItem = {...slotItem, amount: amountToMove};
+          setItemDragInfo({slotItem: slotItem, setSlotItem: setSlotItem, slotNumber: slotNumber, containerId: containerId, moveItem: moveItem});
+          return $(createPreview(moveItem, width, height));
+        },
+        start: function() {
+          slotRef.current.style.opacity = '0.5';
+        },
+        stop: function() {
+          slotRef.current.style.opacity = '1.0';
+        },
+        appendTo: '.makeStyles-inventoryRoot-4',
+        containment: 'window',
+        scroll: false,
+      });
+    }
+    else {
+      if ($(slotRef.current).data('ui-draggable')) {
+        $(slotRef.current).draggable('destroy');
+      }
+    }
+
+
+
+    $(slotRef.current).droppable({
+      hoverClass: classes.over,
+      tolerance: "pointer",
+      drop: function(event, ui) {
+
+        if(itemDragInfo === null) return;
+
+
+        const fromSlotItem = itemDragInfo.slotItem;
+        const fromSetSlotItem = itemDragInfo.setSlotItem;
+        const fromSlotNumber = itemDragInfo.slotNumber;
+        const fromContainerId = itemDragInfo.containerId;
+        let moveItem = itemDragInfo.moveItem;
+
+        if (slotItem && slotItem.label !== moveItem.label) return;
+        if (slotNumber === fromSlotNumber) return;
+
+        //NUICallBack
+
+        //if succeed
+        if (moveItem.amount === 0) {
+          handleAskForAmount(fromSlotItem, fromSetSlotItem, fromSlotNumber, fromContainerId, moveItem);
+          return;
+        }
+
+        handleMoveItem(fromSlotItem, fromSetSlotItem, fromSlotNumber, fromContainerId, moveItem);
+        },
+    });
+  })
 
 
   return  (
-    // <SlotTooltip
-    //   open={tooltipOpen}
-    //   onClose={handleTooltipClose}
-    //   onOpen={handleTooltipOpen}
-    //   enterDelay={1000}
-    //   enterNextDelay={1000}
-    //   title={slotItem ? buildTooltip(slotItem) : ""}
-    //   disableTouchListener
-    //   disableFocusListener
-    //   placement='right'
-    // >
-      <Draggable
-        id="orange-draggable"
-        type="orange"
-        data="Some Orange Data"
+    <SlotTooltip
+      open={tooltipOpen}
+      onClose={handleTooltipClose}
+      onOpen={handleTooltipOpen}
+      enterDelay={1000}
+      enterNextDelay={1000}
+      title={slotItem ? buildTooltip(slotItem) : ""}
+      disableTouchListener
+      disableFocusListener
+      placement='right'
+    >
+      <div
+        ref={slotRef}
+        className={classes.slot}
+        // onDragStart={handleOnDragStart}
+        // onDragEnd={handleOnDragEnd}
+        // onDragOver={handleOnDragOver}
+        // onDrop={handleOnDrop}
+        // onDragEnter={handleOnDragEnter}
+        // onDragLeave={handleOnDragLeave}
+        onContextMenu={handleOnContextMenu}
+        onDoubleClick={handleOnDoubleClick}
       >
-
-
-        <div
-          className={classes.slot}
-          // onDragStart={handleOnDragStart}
-          // onDragEnd={handleOnDragEnd}
-          // onDragOver={handleOnDragOver}
-          // onDrop={handleOnDrop}
-          // onDragEnter={handleOnDragEnter}
-          // onDragLeave={handleOnDragLeave}
-          onContextMenu={handleOnContextMenu}
-          onDoubleClick={handleOnDoubleClick}
-          // onMouseDown={() => shouldOpenTooltip = false}
-          // onMouseUp={() => shouldOpenTooltip = true}
-        >
-          { hotbar && <div className={classes.hotbarSlotNumber}>{slotNumber}</div> }
-          { slotItem && <Item item={slotItem} /> }
-        </div>
-      </Draggable>
-
-    // </SlotTooltip>
+        { hotbar && <div className={classes.hotbarSlotNumber}>{slotNumber}</div> }
+        { slotItem && <Item item={slotItem} /> }
+      </div>
+    </SlotTooltip>
   );
 }

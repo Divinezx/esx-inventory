@@ -6,7 +6,6 @@ import { useItemDrag, useSetItemDrag } from "../../state/dragItem.state";
 import { usePreviewDrag } from "../../hooks/usePreviewDrag";
 import {  useSetMenuPosition, useSetShowMenu, useSetShowUseOption } from "../../state/contextMenu.state";
 import { useDialogContext } from "../../providers/DialogProvider";
-import { Draggable, DragComponent, Droppable } from "react-dragtastic";
 
 interface SlotProps {
   slotNumber: number
@@ -205,7 +204,7 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
     let metadataInfo:JSX.Element[] = [];
     for (let info in metadata) {
       if (info === 'description') continue;
-      metadataInfo.push((<div key={info} className={classes.metadataItem}><div><b>{info.replace(/_/g, " ")}: </b></div><div style={{marginLeft: '5px'}}>{metadata[info]}</div></div>));
+      metadataInfo.push((<div className={classes.metadataItem}><div><b>{info.replace(/_/g, " ")}: </b></div><div style={{marginLeft: '5px'}}>{metadata[info]}</div></div>));
     }
     return metadataInfo;
   }
@@ -221,44 +220,35 @@ export const Slot: React.FC<SlotProps> = ({slotNumber, containerId, hotbar, item
   }
 
 
-
   return  (
-    // <SlotTooltip
-    //   open={tooltipOpen}
-    //   onClose={handleTooltipClose}
-    //   onOpen={handleTooltipOpen}
-    //   enterDelay={1000}
-    //   enterNextDelay={1000}
-    //   title={slotItem ? buildTooltip(slotItem) : ""}
-    //   disableTouchListener
-    //   disableFocusListener
-    //   placement='right'
-    // >
-      <Draggable
-        id="orange-draggable"
-        type="orange"
-        data="Some Orange Data"
+    <SlotTooltip
+      open={tooltipOpen}
+      onClose={handleTooltipClose}
+      onOpen={handleTooltipOpen}
+      enterDelay={1000}
+      enterNextDelay={1000}
+      title={slotItem ? buildTooltip(slotItem) : ""}
+      disableTouchListener
+      disableFocusListener
+      placement='right'
+    >
+      <div draggable
+        ref={slotRef}
+        className={classes.slot}
+        onDragStart={handleOnDragStart}
+        onDragEnd={handleOnDragEnd}
+        onDragOver={handleOnDragOver}
+        onDrop={handleOnDrop}
+        onDragEnter={handleOnDragEnter}
+        onDragLeave={handleOnDragLeave}
+        onContextMenu={handleOnContextMenu}
+        onDoubleClick={handleOnDoubleClick}
+        onMouseDown={() => shouldOpenTooltip = false}
+        onMouseUp={() => shouldOpenTooltip = true}
       >
-
-
-        <div
-          className={classes.slot}
-          // onDragStart={handleOnDragStart}
-          // onDragEnd={handleOnDragEnd}
-          // onDragOver={handleOnDragOver}
-          // onDrop={handleOnDrop}
-          // onDragEnter={handleOnDragEnter}
-          // onDragLeave={handleOnDragLeave}
-          onContextMenu={handleOnContextMenu}
-          onDoubleClick={handleOnDoubleClick}
-          // onMouseDown={() => shouldOpenTooltip = false}
-          // onMouseUp={() => shouldOpenTooltip = true}
-        >
-          { hotbar && <div className={classes.hotbarSlotNumber}>{slotNumber}</div> }
-          { slotItem && <Item item={slotItem} /> }
-        </div>
-      </Draggable>
-
-    // </SlotTooltip>
+        { hotbar && <div className={classes.hotbarSlotNumber}>{slotNumber}</div> }
+        { slotItem && <Item item={slotItem} /> }
+      </div>
+    </SlotTooltip>
   );
 }

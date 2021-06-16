@@ -6,6 +6,7 @@ import { useIsMenuVisible } from "./state/visibility.state";
 import InventoryRoot from "./components/InventoryRoot";
 import ContextMenu from './components/ContextMenu/ContextMenu';
 import { DialogProvider } from './providers/DialogProvider';
+import { DndContext } from '@dnd-kit/core';
 
 setTimeout(() => {
   window.dispatchEvent(
@@ -107,10 +108,12 @@ const InventoryWrapper: React.FC = () => {
 
   return (
     <DialogProvider>
-      <div className="App" style={styled}>
-        <InventoryRoot />
-        <ContextMenu />
-      </div>
+      <DndContext>
+        <div className="App" style={styled}>
+          <InventoryRoot />
+          <ContextMenu />
+        </div>
+      </DndContext>
     </DialogProvider>
   );
 

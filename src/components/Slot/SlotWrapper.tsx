@@ -12,6 +12,7 @@ interface Props {
 
 const useStyles = makeStyles( (theme:Theme) => ({
   slotsWrapper: {
+    position: 'relative',
     display: 'grid',
     height: 'calc(100% - 65px)',
     gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))',
