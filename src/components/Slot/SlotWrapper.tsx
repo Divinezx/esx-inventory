@@ -14,7 +14,7 @@ export const useStylesSlotWrapper = makeStyles( (theme:Theme) => ({
   slotsWrapper: {
     position: 'relative',
     display: 'grid',
-    height: 'calc(100% - 65px)',
+    height: 'calc(100% - 7%)',
     gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))',
     gridAutoRows: '110px',
     gridGap: '5px',
@@ -24,18 +24,21 @@ export const useStylesSlotWrapper = makeStyles( (theme:Theme) => ({
     [theme.breakpoints.up('720p')]: {
       gridTemplateColumns: 'repeat(auto-fill, minmax(70px, 1fr))',
       gridAutoRows: '85px',
+      height: 'calc(100% - 8%)',
     },
     [theme.breakpoints.up('1080p')]: {
       gridTemplateColumns: 'repeat(5, minmax(90px, 1fr))',
-      gridAutoRows: '110px',
+      gridAutoRows: '120px',
+      height: 'calc(100% - 7%)',
     },
     [theme.breakpoints.up('1440p')]: {
       gridTemplateColumns: 'repeat(5, minmax(90px, 1fr))',
-      gridAutoRows: '140px',
+      gridAutoRows: '163px',
     },
     [theme.breakpoints.up('2160p')]: {
       gridTemplateColumns: 'repeat(5, minmax(90px, 1fr))',
-      gridAutoRows: '200px',
+      gridAutoRows: '245px',
+      gridGap: '10px',
     },
   }
 }));

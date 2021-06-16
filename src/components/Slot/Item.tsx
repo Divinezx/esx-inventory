@@ -13,8 +13,9 @@ export const useStyles = makeStyles( (theme:Theme) => ({
   },
   itemInfo: {
     position: 'absolute',
-    right: '3px',
+    right: '3%',
     textAlign: 'right',
+    top: '1.5%'
   },
 
   itemLabel: {
@@ -27,14 +28,51 @@ export const useStyles = makeStyles( (theme:Theme) => ({
     fontWeight: 600,
     backgroundColor: theme.inventory.hoverColor,
     textTransform: 'capitalize',
-    color: theme.inventory.textColor
+    paddingBlock: '1px',
+    color: theme.inventory.textColor,
+    [theme.breakpoints.up('720p')]: {
+      fontSize: '0.65rem',
+    },
+    [theme.breakpoints.up('1080p')]: {
+      fontSize: '0.85rem',
+    },
+    [theme.breakpoints.up('1440p')]: {
+      fontSize: '1.15rem',
+    },
+    [theme.breakpoints.up('2160p')]: {
+      fontSize: '1.5rem',
+    },
   },
   itemAmount: {
     fontSize: '0.85rem',
-    color: theme.inventory.secondaryTextColor
+    color: theme.inventory.secondaryTextColor,
+    [theme.breakpoints.up('720p')]: {
+      fontSize: '0.65rem',
+    },
+    [theme.breakpoints.up('1080p')]: {
+      fontSize: '0.85rem',
+    },
+    [theme.breakpoints.up('1440p')]: {
+      fontSize: '1.15rem',
+    },
+    [theme.breakpoints.up('2160p')]: {
+      fontSize: '1.5rem',
+    },
   },
   itemWeight: {
     fontSize: '0.65rem',
+    [theme.breakpoints.up('720p')]: {
+      fontSize: '0.50rem',
+    },
+    [theme.breakpoints.up('1080p')]: {
+      fontSize: '0.65rem',
+    },
+    [theme.breakpoints.up('1440p')]: {
+      fontSize: '1rem',
+    },
+    [theme.breakpoints.up('2160p')]: {
+      fontSize: '1.15rem',
+    },
   },
   itemImage: {
     position: 'absolute',

@@ -15,12 +15,24 @@ const useStyles = makeStyles( (theme:Theme) => ({
   containerHeader: {
     display: 'flex',
     justifyContent: 'space-between',
-    height: '45px',
+    height: '5%',
     color: theme.inventory.textColor,
+    marginBottom: '1%'
   },
 
   leftInfo: {
-
+    [theme.breakpoints.up('720p')]: {
+      fontSize: '0.65rem',
+    },
+    [theme.breakpoints.up('1080p')]: {
+      fontSize: '0.85rem',
+    },
+    [theme.breakpoints.up('1440p')]: {
+      fontSize: '1.1rem',
+    },
+    [theme.breakpoints.up('2160p')]: {
+      fontSize: '1.4rem',
+    },
   },
 
   rightInfo: {
@@ -28,7 +40,19 @@ const useStyles = makeStyles( (theme:Theme) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(2, auto)',
     gridColumnGap: '30px',
-    fontSize: '0.85rem'
+    fontSize: '0.85rem',
+    [theme.breakpoints.up('720p')]: {
+      fontSize: '0.65rem',
+    },
+    [theme.breakpoints.up('1080p')]: {
+      fontSize: '0.85rem',
+    },
+    [theme.breakpoints.up('1440p')]: {
+      fontSize: '1.1rem',
+    },
+    [theme.breakpoints.up('2160p')]: {
+      fontSize: '1.4rem',
+    },
   },
 
   secondaryColor: {
@@ -37,7 +61,19 @@ const useStyles = makeStyles( (theme:Theme) => ({
   },
   containerId: {
     fontSize: '0.65rem',
-    marginTop: '2px'
+    marginTop: '2px',
+    [theme.breakpoints.up('720p')]: {
+      fontSize: '0.45rem',
+    },
+    [theme.breakpoints.up('1080p')]: {
+      fontSize: '0.65rem',
+    },
+    [theme.breakpoints.up('1440p')]: {
+      fontSize: '0.9rem',
+    },
+    [theme.breakpoints.up('2160p')]: {
+      fontSize: '1.1rem',
+    },
   }
 }));
 

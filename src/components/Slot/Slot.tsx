@@ -42,7 +42,23 @@ const useStyles = makeStyles( (theme:Theme) => ({
     borderRight: `1px groove ${theme.inventory.borderColor}`,
     borderBottom: `1px groove ${theme.inventory.borderColor}`,
     borderRadius: '0px 0px 4px',
-    fontSize: '0.85rem'
+    fontSize: '0.85rem',
+    [theme.breakpoints.up('720p')]: {
+      fontSize: '0.65rem',
+      width: '12.5px',
+    },
+    [theme.breakpoints.up('1080p')]: {
+      fontSize: '0.85rem',
+      width: '15px',
+    },
+    [theme.breakpoints.up('1440p')]: {
+      fontSize: '1.25rem',
+      width: '20px',
+    },
+    [theme.breakpoints.up('2160p')]: {
+      fontSize: '1.5rem',
+      width: '25px',
+    },
   },
   beingDragged: {
     opacity: 0.5,

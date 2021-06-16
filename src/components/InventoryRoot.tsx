@@ -5,9 +5,9 @@ import Container from "./Container/Container";
 
 const useStyles = makeStyles( (theme:Theme) => ({
   inventoryRoot: {
-    width: '60%',
+    width: '65%',
     height: '75%',
-    padding: '1%',
+    padding: '1.5%',
     margin: 'auto',
     display: 'flex',
     justifyContent: 'space-between'
